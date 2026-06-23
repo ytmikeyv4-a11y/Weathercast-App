@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>WeatherCast — Live Weather Podcast</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+
+<!-- External CSS -->
+<link rel="stylesheet" href="style.css"/>
+
+</head>
+<body>
+
+<!-- ── LOADER ── -->
+<div class="loader" id="ldr">
+  <div class="ring"></div>
+  <div class="ltxt" id="ltxt">WEATHERCAST</div>
+</div>
+
+<!-- ── WEATHER EFFECT LAYERS ── -->
+<div class="fx" id="rc"></div>
+<div class="fx" id="sc"></div>
+<div class="fx" id="stc"></div>
+
+<!-- ── CANVAS BACKGROUND ── -->
+<canvas id="bg"></canvas>
+
+<!-- ── MAIN APP ── -->
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">🎙 WeatherCast</div>
+    <div class="badge"><div class="dot"></div>LIVE</div>
+  </header>
+
+  <!-- BRAVE WARNING -->
+  <div class="brave-warn" id="bravewarn">
+    ⚠️ <b>Brave Browser detected!</b> Brave's shields block API calls.<br>
+    Please open this file in <b>Google Chrome</b> instead for live weather data to work.
+  </div>
+
+  <!-- SEARCH -->
+  <div class="srow">
+    <input id="inp" class="sinput" type="text" placeholder="Type any city… Mumbai, Tokyo, London, New York"/>
+    <button class="sbtn" onclick="go()">BROADCAST</button>
+  </div>
+  <div class="err" id="err"></div>
+
+  <!-- HERO CARD -->
+  <div class="card">
+    <div class="crow">
+      <div>
+        <div class="cname" id="cn">—</div>
+        <div class="ccountry" id="cc">SEARCH A CITY TO BEGIN</div>
+      </div>
+      <div class="tright">
+        <div class="tmain" id="tm">—°</div>
+        <div class="tfeel" id="tf">Feels like —</div>
+      </div>
+    </div>
+    <div class="wrow">
+      <span class="wicon" id="wi">🌍</span>
+      <div>
+        <span class="ctag" id="ct">AWAITING SIGNAL</span>
+        <div class="cdesc" id="cd"></div>
+      </div>
+    </div>
+    <div class="sgrid" id="sg"></div>
+
+    <!-- SUN ARC -->
+    <div class="sunw" id="sunw" style="display:none">
+      <svg viewBox="0 0 600 100" preserveAspectRatio="none">
+        <path d="M30,96 Q300,-10 570,96" stroke="rgba(255,180,0,.2)" stroke-width="2" fill="none" stroke-dasharray="5 4"/>
+        <circle id="sdot" cx="0" cy="0" r="9" fill="#FFD700" filter="url(#gf)"/>
+        <defs>
+          <filter id="gf">
+            <feGaussianBlur stdDeviation="3" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+      </svg>
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.28);padding:0 18px">
+        <span id="srl">🌅 —</span>
+        <span id="ssl">🌇 —</span>
+      </div>
+    </div>
+
+    <!-- AQI BAR -->
+    <div class="aqiw" id="aqiw" style="display:none">
+      <div class="aqil"><span>AIR QUALITY INDEX</span><span id="aqiv">—</span></div>
+      <div class="aqibar"><div class="aqicur" id="aqic" style="left:5%"></div></div>
+    </div>
+  </div>
+
+  <!-- HOURLY FORECAST -->
+  <div class="sec">HOURLY FORECAST</div>
+  <div class="hstrip" id="hs">
+    <div style="color:rgba(255,255,255,.26);font-size:.8rem;padding:14px">Search a city to load live hourly data…</div>
+  </div>
+
+  <!-- PODCAST PLAYER -->
+  <div class="sec">PODCAST BROADCAST</div>
+  <div class="pcard">
+    <div class="pmeta">
+      <div class="pthumb" id="pt">🎙</div>
+      <div>
+        <div class="ptitle" id="etitle">Welcome to WeatherCast</div>
+        <div class="psub" id="esub">Search a city to generate your live weather broadcast</div>
+      </div>
+    </div>
+    <div class="wf" id="wf"></div>
+    <div class="pctrl">
+      <button class="cbtn" onclick="skB()">⏮</button>
+      <button class="playbtn" id="pb" onclick="tog()">▶</button>
+      <button class="cbtn" onclick="skF()">⏭</button>
+      <div class="prow">
+        <span class="tl" id="tc">0:00</span>
+        <div class="ptrack" onclick="seek(event)">
+          <div class="pfill" id="pf" style="width:0%"></div>
+        </div>
+        <span class="tl" id="tt">0:00</span>
+      </div>
+      <button class="cbtn" id="vb" onclick="muteT()">🔊</button>
+    </div>
+    <div class="sbox" id="sb">
+      <em>🎙 Your live weather broadcast will appear here once you search for a city…</em>
+    </div>
+  </div>
+
+  <!-- 7-DAY TIMELINE -->
+  <div class="sec">7-DAY TIMELINE</div>
+  <div class="tgrid" id="tg">
+    <div style="color:rgba(255,255,255,.26);font-size:.8rem;padding:14px">Search a city to load live timeline…</div>
+  </div>
+
+  <!-- WEATHER NARRATIVE -->
+  <div class="sec">WEATHER NARRATIVE</div>
+  <div class="card">
+    <p class="narr" id="nrt">Search for any city to receive a full live weather narrative.</p>
+  </div>
+
+</div><!-- end .wrap -->
+
+<!-- External JavaScript -->
+<script src="script.js"></script>
+
+</body>
+</html>
