@@ -1,11 +1,4 @@
-// ============================================================
-//   WeatherCast — Live Weather Podcast Application
-//   script.js — All JavaScript Logic
-//   Author: WeatherCast Project
-//   Version: 3.0
-// ============================================================
 
-// ── Detect Brave ──
 (async()=>{
   const isBrave=navigator.brave&&await navigator.brave.isBrave().catch(()=>false);
   if(isBrave) document.getElementById('bravewarn').style.display='block';
