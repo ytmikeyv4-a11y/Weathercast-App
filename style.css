@@ -1,9 +1,4 @@
-/* ============================================================
-   WeatherCast — Live Weather Podcast Application
-   style.css — All CSS Styles and Animations
-   Author: WeatherCast Project
-   Version: 3.0
-============================================================ */
+
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--a:#00f5ff;--a2:#ff6b35;--a3:#7fff00;--bg:#090918;--card:rgba(255,255,255,0.05);--border:rgba(255,255,255,0.1);--text:#e8e8f0}
