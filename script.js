@@ -1,5 +1,3 @@
-
-
 // ── Detect Brave ──
 (async()=>{
   const isBrave=navigator.brave&&await navigator.brave.isBrave().catch(()=>false);
@@ -33,7 +31,7 @@ const hideErr=()=>document.getElementById('err').style.display='none';
 
 // ── FETCH ──
 async function apiGet(url){
-  const r=await fetch(url);
+  const r=await fetch(url,{method:'GET',mode:'cors',headers:{'Accept':'application/json'},referrerPolicy:'no-referrer'});
   if(!r.ok)throw new Error('Server error: '+r.status);
   return r.json();
 }
@@ -50,7 +48,22 @@ async function go(){
     if(!gd.results||!gd.results.length){setL(false);showErr('⚠️ City "'+v+'" not found. Try a different spelling.');return;}
     const norm=s=>(s||'').toLowerCase().replace(/[^a-z]/g,'');
     const inp=norm(v);
-    const g=gd.results.find(r=>norm(r.name)===inp);
+    // Only accept results where feature_code is an official city/town AND population > 500
+    const g=gd.results.find(r=>{
+      if(norm(r.name)!==inp)return false;
+      const pop=r.population;
+      const fc=(r.feature_code||'').toUpperCase();
+      const isAdminCity=['PPLC','PPLA','PPLA2','PPLA3','PPLA4'].some(x=>fc===x);
+      const storedPop=r.population;
+      const cc=(r.country_code||'').toUpperCase();
+      // Admin cities (state/district capitals): always accept
+      if(isAdminCity)return true;
+      // PPL: Indian city with no stored population = real city (accept)
+      if(fc==='PPL'&&cc==='IN'&&storedPop==null)return true;
+      // PPL: any country, must have population >= 50000
+      if(fc==='PPL'&&storedPop!=null)return storedPop>=50000;
+      return false;
+    });
     if(!g){setL(false);showErr('⚠️ City "'+v+'" not found. Please enter a valid city name.');return;}
     setL(true,'FETCHING LIVE WEATHER...');
     // Weather
@@ -66,7 +79,7 @@ async function go(){
     const msg=e.message||'';
     if(msg.includes('fetch')||msg.includes('network')||msg.includes('Failed')||msg.includes('Load')){
       showErr(`⚠️ <b>Network blocked!</b><br><br>
-      You are using <b>Brave Browser</b> — Brave's shields block API calls from local files.<br><br>
+      API call failed. If you are using <b>Brave Browser</b>, click the <b>Shields icon</b> (top-right lion icon) → set <b>Shields Down</b> for this site, then refresh.<br><br>
       👉 <b>Fix:</b> Open this file in <b>Google Chrome</b> instead of Brave.<br>
       Right-click the HTML file → Open with → Google Chrome`);
     }else{
